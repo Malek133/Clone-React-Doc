@@ -1,0 +1,47 @@
+*{
+  background-color: rgb(12, 10, 25);
+  color: aliceblue;
+ }
+ 
+nav .active{
+  color: #abadb3;
+  border: 1 solid rgb(233, 216, 216);
+  border-radius: 180px;
+  padding: 5px 22px;
+  background-color: rgb(67, 66, 70);
+}
+
+.containerpro {  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px 10px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "sidebar sidebar navbar navbar navbar navbar navbar navbar navbar navbar"
+    "sidebar sidebar navbar navbar navbar navbar navbar navbar navbar navbar"
+    "sidebar sidebar navbar navbar navbar navbar navbar navbar navbar navbar"
+    "sidebar sidebar content content content content content content content content"
+    "sidebar sidebar content content content content content content content content"
+    "sidebar sidebar content content content content content content content content"
+    "sidebar sidebar content content content content content content content content"
+    "sidebar sidebar content content content content content content content content"
+    "sidebar sidebar content content content content content content content content"
+    "sidebar sidebar content content content content content content content content";
+}
+
+.sidebar { 
+  grid-area: sidebar;
+  height: 100vh;
+  box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+  /* border: 3px solid white; */
+ }
+
+.navbar { 
+  grid-area: navbar; 
+  /* border: 3px solid red; */
+}
+
+.content { 
+  grid-area: content;
+  /* border: 3px solid rgb(252, 218, 0); */
+ }
