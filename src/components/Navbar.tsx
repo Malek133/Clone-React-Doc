@@ -23,7 +23,7 @@ const Navbar = () => {
             </li>
 
             <li className="hover:text-[#215ce7] text-xl">
-                <NavLink to="/contribute">contribute</NavLink>
+                <NavLink to="/register">register</NavLink>
             </li>
 
             <li className="hover:text-[#215ce7] text-xl">

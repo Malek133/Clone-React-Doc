@@ -7,11 +7,11 @@ import Instlation from '../components/pages/learn/Instlation'
 import Contact from '../components/pages/Contact'
 import AboutPage from '../components/pages/learn/AboutPage'
 import Login from '../components/pages/Login'
- import Contribute from '../components/pages/Contribute'
 import Home from '../components/pages/Home';
 import ProtectedRoute from '../components/auth/ProtectedRoute'
 import ErrorHandler from '../components/errors/ErrorHandler'
 import PageNotFound from '../components/pages/PageNotFound'
+import Register from '../components/pages/Register'
 
 
 const isLoggedIn = false;
@@ -27,13 +27,16 @@ const router = createBrowserRouter( createRoutesFromElements(
      errorElement={<ErrorHandler />} >
 
         <Route index element={<Home />}  />
-       <Route path='contact' element={<div><Contact /></div>} errorElement={<ErrorHandler />} />
-       <Route path='about' element={<AboutPage />} errorElement={<ErrorHandler />} />
+       <Route path='contact' element={
+       <div><Contact /></div>} 
+       errorElement={<ErrorHandler />} />
+       <Route path='about' element={<AboutPage />} 
+       errorElement={<ErrorHandler />} />
 
-       <Route path='contribute' 
-       element={<ProtectedRoute isAllowed={isLoggedIn} 
-       redirectPath="/login" data={userData} >
-        <Contribute />
+       <Route path='register' 
+       element={<ProtectedRoute isAllowed={!isLoggedIn} 
+       redirectPath="/login" data={userData}  >
+        <Register /> 
       
        </ProtectedRoute>}  
        errorElement={<ErrorHandler statusCode={404} />} 
@@ -41,8 +44,8 @@ const router = createBrowserRouter( createRoutesFromElements(
 
        <Route path='login' 
        element={<ProtectedRoute isAllowed={!isLoggedIn} 
-       redirectPath="/contribute" data={userData} >
-        <Login />
+       redirectPath="/register" data={userData} >
+       <Login />
        </ProtectedRoute>} />
 
     </Route>
