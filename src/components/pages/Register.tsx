@@ -7,6 +7,9 @@ import { regiterSchema } from "../validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { axiosInstance } from "../config/axiosConfig";
 import { useNavigate } from "react-router-dom";
+ import { AxiosError } from "axios";
+ import { IErrors } from "../interface";
+import { useState } from "react";
 
 
 
@@ -14,30 +17,33 @@ interface IFormInput {
   username: string
   email:string
   password:string
-  phone:number
-  
 }
 
 
 const Register = () => {
 
+  const [isloading,setIsloading] =useState(false);
   const navigat = useNavigate()
   const {register,handleSubmit,formState:{errors} } = useForm<IFormInput>({
     resolver: yupResolver(regiterSchema)
   })
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    setIsloading(true)
     try {
      const {status} = await axiosInstance.post('/auth/local/register',data);
      if(status === 200){
-      console.log(status)
       alert('Registered Successfully')
       setTimeout(() =>{
         navigat('/login')
-      },1500)
+      },1000)
      }
     } catch (error) {
-      console.log(error)
+    
+       const errorObj = error as AxiosError<IErrors>;
+       alert(`${errorObj.response?.data.error.message} changit please`)
+    } finally {
+      setIsloading(false)
     }
   }
 
@@ -58,8 +64,8 @@ const Register = () => {
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
      {renderRegister}
 
-<Button >
-  Register
+<Button isloading={isloading} >
+  {isloading ?  'Loading' : 'Register'}
   </Button>
 
 </form>

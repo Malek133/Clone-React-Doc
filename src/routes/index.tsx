@@ -14,8 +14,13 @@ import PageNotFound from '../components/pages/PageNotFound'
 import Register from '../components/pages/Register'
 
 
-const isLoggedIn = false;
-const userData: { email: string } | null = isLoggedIn ? { email: "email@gmail.com" } : null;
+
+
+
+const storageKey = 'routeLoged';
+const userDataString = localStorage.getItem(storageKey);
+const userData = userDataString ? JSON.parse(userDataString) : null
+// console.log(userData)
 
 const router = createBrowserRouter( createRoutesFromElements(
     <>
@@ -23,6 +28,7 @@ const router = createBrowserRouter( createRoutesFromElements(
     <Route path="/" element={<div>
         <Navbar />
       <Outlet />  
+      
     </div>}
      errorElement={<ErrorHandler />} >
 
@@ -34,7 +40,7 @@ const router = createBrowserRouter( createRoutesFromElements(
        errorElement={<ErrorHandler />} />
 
        <Route path='register' 
-       element={<ProtectedRoute isAllowed={!isLoggedIn} 
+       element={<ProtectedRoute isAllowed={userData?.jwt} 
        redirectPath="/login" data={userData}  >
         <Register /> 
       
@@ -43,7 +49,7 @@ const router = createBrowserRouter( createRoutesFromElements(
        />
 
        <Route path='login' 
-       element={<ProtectedRoute isAllowed={!isLoggedIn} 
+       element={<ProtectedRoute isAllowed={userData?.jwt} 
        redirectPath="/register" data={userData} >
        <Login />
        </ProtectedRoute>} />
