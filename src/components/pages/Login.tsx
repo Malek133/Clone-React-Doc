@@ -9,6 +9,7 @@ import Button from "../UI/Button";
 import { axiosInstance } from "../config/axiosConfig";
 import { AxiosError } from "axios";
 import { IErrors } from "../interface";
+// import toast from "react-hot-toast";
 
 
 interface IFormInput {
@@ -39,6 +40,16 @@ const LoginPage = () => {
       const {status,data:res}=await axiosInstance.post('auth/local',data)
        
      if(status === 200){
+      // toast.success('Her we go to Home!',{
+      //   duration: 2000,
+      //   position: 'bottom-center',
+      //   style: {
+      //       backgroundColor:"black",
+      //       color:"white",
+      //       width:"fit-content"
+      //   },
+      // }) 
+
          localStorage.setItem('routeLoged', JSON.stringify(res));
             setTimeout(() =>{
                location.replace('/')

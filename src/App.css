@@ -3,13 +3,13 @@
   color: aliceblue;
  }
  
-nav .active{
+/* nav .active{
   color: #abadb3;
   border: 1 solid rgb(233, 216, 216);
   border-radius: 180px;
   padding: 5px 22px;
-  background-color: rgb(67, 66, 70);
-}
+  /* background-color: rgb(67, 66, 70); */
+/* }  */
 
 .containerpro {  display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
