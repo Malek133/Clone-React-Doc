@@ -30,3 +30,9 @@ export interface ILoginInput {
         pattern?:RegExp
     }
 }
+
+export interface ITodo {
+    id?:string
+    title:string
+    des:string
+}
