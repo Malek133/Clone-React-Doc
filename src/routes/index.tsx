@@ -79,7 +79,6 @@ import { Route, createBrowserRouter,
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 import ErrorHandler from "../components/errors/ErrorHandler";
 import HomePage from "../components/pages/TodoList";
-import AboutPage from "../components/pages/learn/AboutPage";
 import LoginPage from "../components/pages/Login";
 import Register from "../components/pages/Register";
 import PageNotFound from "../components/pages/PageNotFound";
@@ -88,6 +87,7 @@ import Layout from "../components/pages/learn/Layout";
 import QuickStartPage from "../components/pages/learn";
 import Instlation from "../components/pages/learn/Instlation";
 import ThinkingReact from "../components/pages/learn/Thinking";
+import AllTodo from "../components/pages/learn/AllTodo";
 
 
 
@@ -109,7 +109,7 @@ const router = createBrowserRouter(
             <ProtectedRoute isAllowed={userData?.jwt} 
             redirectPath="/login" 
             data={userData}>
-               <HomePage />
+               <AllTodo />
             </ProtectedRoute>
           }
         />
@@ -120,7 +120,7 @@ const router = createBrowserRouter(
             <ProtectedRoute isAllowed={userData?.jwt} 
             redirectPath="/login" 
             data={userData}>
-              <AboutPage />
+               <HomePage />
             </ProtectedRoute>
           }
         />

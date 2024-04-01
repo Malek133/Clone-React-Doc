@@ -5,12 +5,13 @@ interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   isloading?:boolean
   width?: "w-full" | "w-fit";
+  type?: "button" | "submit" | "reset";
 }
 
-const Button = ({ children, className
+const Button = ({ children, className,type
   ,isloading, width = "w-full", ...rest }: IProps) => {
   return (
-    <button
+    <button type={type}
       className={`${className} ${width} text-sm rounded-lg text-white px-3 py-2 duration-200 font-medium bg-[#149eca]`}
       {...rest} disabled={isloading}
     >

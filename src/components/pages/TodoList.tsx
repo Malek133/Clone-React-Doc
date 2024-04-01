@@ -10,6 +10,7 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import Textarea from "../UI/Textarea";
 import { axiosInstance } from "../config/axiosConfig";
 import TodoSkeleton from "./TodoSkeleton";
+import { faker } from '@faker-js/faker';
 
 
 const TodoList = () => {
@@ -148,6 +149,35 @@ const onRemove = async () => {
 }
 
 
+  const generateTodos = async () =>{
+        
+     for (let index = 0; index < 10; index++) {
+       
+  
+    try {
+         const {status}= await axiosInstance.post(`/todos/`,
+     {data:{title:faker.word.words(5),
+         des:faker.lorem.paragraph(2)
+      ,user:[userData.user.id]}},{
+         headers:{ 
+            Authorization: `Bearer ${userData.jwt}`,
+                  }
+   })
+
+      if(status === 200){
+        
+        setQueryversion(p => p + 1)
+     }
+      
+       } catch (error) {
+        console.log(error)
+       }  
+      
+     }
+   }
+
+
+
     return (
       <main className="space-y-1" >
         <div className="flex justify-center items-center space-x-4">
@@ -162,8 +192,7 @@ const onRemove = async () => {
 
         <Button 
         className="bg-stone-400 text-sm text-white w-40"
-        // onClick={generateTodos}
-        >
+         onClick={generateTodos}>
         Take fake Todo
         </Button>
         
@@ -173,11 +202,11 @@ const onRemove = async () => {
        
         <span></span>
         <span></span>
-        {data.todos.length ? data.todos.map((todo:ITodo) => ( 
-        <div key={todo.id} className="text-sm border-2 p-2 border-stone-700 w-96">
+        {data.todos.length ? data.todos.map((todo:ITodo,idx:number) => ( 
+        <div key={todo.id} className="text-sm rounded border-2 p-2 border-stone-700 w-96">
       <div className="flex items-center justify-between p-3 space-x-8
        rounded-md even:bg-glray-100">
-        <p className="w-full font-semibold">{todo.title}</p> 
+        <p className="w-full font-semibold">{idx+1} - {todo.title}</p> 
 
         <div className="flex items-center justify-end w-full space-x-3">
             <Button onClick={() =>{onopenEditModal(todo)}} 
@@ -202,7 +231,8 @@ const onRemove = async () => {
 
         <div className="flex justify-center items-center space-x-1">
           <Button className="bg-green-600">Edit</Button>
-          <Button onClick={onCloseEditModal} className="bg-stone-400">Cancel</Button>
+          <Button type="button" onClick={onCloseEditModal} 
+          className="bg-stone-400">Cancel</Button>
         </div>
         </form>
         
@@ -217,7 +247,7 @@ const onRemove = async () => {
         <div className="flex justify-center items-center space-x-1">
           <Button onClick={onRemove} 
           className="bg-red-700">Remove this</Button>
-          <Button onClick={onCloseRemovModal} 
+          <Button onClick={onCloseRemovModal} type="button" 
           className="bg-stone-400">Cancel</Button>
         </div>
         </form>
