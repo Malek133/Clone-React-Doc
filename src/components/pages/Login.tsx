@@ -64,7 +64,7 @@ const LoginPage = () => {
 
   return (
     <div className="max-w-md mx-auto">
-      <h2 className="text-center mb-4 text-3xl font-semibold">
+      <h2 className="text-center mb-4 text-xl font-medium">
         Login to get access!</h2>
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
          {renderLogin}

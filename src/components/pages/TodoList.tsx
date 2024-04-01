@@ -9,6 +9,7 @@ import Input from "../UI/Input";
 import { ChangeEvent, FormEvent, useState } from "react";
 import Textarea from "../UI/Textarea";
 import { axiosInstance } from "../config/axiosConfig";
+import TodoSkeleton from "./TodoSkeleton";
 
 
 const TodoList = () => {
@@ -18,7 +19,10 @@ const userData = userDataString ? JSON.parse(userDataString) : null
 
 const [isOpenEdit, setIsOpenEdit] = useState(false);
 const [todoToEdit,setTodoToEdit] =useState<ITodo>({title:"",des:""})
-const [isOpenModalRemov,setIsOpenRemovModal] =useState(false)
+const [isOpenRemovModal,setIsOpenRemovModal] =useState(false)
+const [isOpenAddModal,setIsOpenAddModal] =useState(false)
+const [todoAdd, setTodoAdd] = useState({title:"",des:""});
+const [queryVersion,setQueryversion]=useState(1)
 
 const onCloseEditModal = () =>{
   setTodoToEdit({title:"",des:""})
@@ -27,6 +31,16 @@ const onCloseEditModal = () =>{
 const onopenEditModal = (todo:ITodo) =>{
   setTodoToEdit(todo)
   setIsOpenEdit(true)
+}
+
+const onOpenAddModal = () =>{
+  setIsOpenAddModal(true)
+}
+
+
+const onCloseAddModal = () =>{
+  setIsOpenAddModal(false)
+  setTodoAdd({title:"",des:""})
 }
 
 const onCloseRemovModal = () =>{
@@ -38,7 +52,7 @@ const onOpenRemoveModal = (todo:ITodo) =>{
 }
 
 const { isLoading, data } = useAuthenticatedQuery({
-  queryKey:[`todo,${todoToEdit.id}`]
+  queryKey:[`todo,${queryVersion}`]
 ,url:'/users/me?populate=todos',config:{
   headers:{ 'Authorization': `Bearer ${userData.jwt}` }
 }})
@@ -46,7 +60,13 @@ const { isLoading, data } = useAuthenticatedQuery({
   if (isLoading) return <div className="flex justify-around items-center">
     <span></span>
     <span></span>
-    <h2>Loading.....</h2>
+    <div className="space-y-1 ">
+         {
+          Array.from({length:4}).map((_,i)=>(
+            <TodoSkeleton key={i} />
+          ))
+         }
+       </div>
     <span></span>
     <span></span>
     </div>
@@ -62,6 +82,36 @@ const changeHandler = (e:ChangeEvent<HTMLInputElement |
  })
 }
 
+const onChangeAddTodoHandler = (e:
+  ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
+  const {value,name} = e.target;
+
+  setTodoAdd({
+    ...todoAdd,[name]: value
+  })
+}
+
+const submitAddHandeler = async (e:FormEvent<HTMLFormElement>) =>{
+  e.preventDefault();
+  const {title,des}= todoAdd;
+  try {
+  const {status} =  await axiosInstance.post(`/todos`,
+  {data:{title,des,user:[userData.user.id]}},{
+    headers:{ 
+       Authorization: `Bearer ${userData.jwt}`,
+              }
+  })
+  if(status === 200){
+    onCloseAddModal()
+    setQueryversion(prev => prev +1)
+   
+  }
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+
 const submitHandeler = async (e:FormEvent<HTMLFormElement>) =>{
   e.preventDefault()
   const {title,des}= todoToEdit;
@@ -74,6 +124,7 @@ const submitHandeler = async (e:FormEvent<HTMLFormElement>) =>{
     });
     if(status===200){
       onCloseEditModal()
+      setQueryversion(prev => prev +1)
     }
   } catch (error) {
     console.log(error)
@@ -89,6 +140,7 @@ const onRemove = async () => {
     
     if(status === 200){
       onCloseRemovModal()
+      setQueryversion(prev => prev +1)
     }
   } catch (error) {
     console.log(error)
@@ -97,13 +149,34 @@ const onRemove = async () => {
 
 
     return (
-      <main className="flex flex-col justify-around items-center space-y-5" >
+      <main className="space-y-1" >
+        <div className="flex justify-center items-center space-x-4">
+      
+      <span></span>
+      <span></span>
+      
+         <Button onClick={onOpenAddModal}
+         className="bg-blue-700 text-sm text-white w-40">
+        Create New Todo
+        </Button>
+
+        <Button 
+        className="bg-stone-400 text-sm text-white w-40"
+        // onClick={generateTodos}
+        >
+        Take fake Todo
+        </Button>
+        
+        </div>
+        <div className="flex flex-col justify-around items-center space-y-5">
+
+       
         <span></span>
         <span></span>
         {data.todos.length ? data.todos.map((todo:ITodo) => ( 
-        <div key={todo.id} className="border-2 p-2 border-white w-96">
+        <div key={todo.id} className="text-sm border-2 p-2 border-stone-700 w-96">
       <div className="flex items-center justify-between p-3 space-x-8
-       rounded-md even:bg-gray-100">
+       rounded-md even:bg-glray-100">
         <p className="w-full font-semibold">{todo.title}</p> 
 
         <div className="flex items-center justify-end w-full space-x-3">
@@ -124,11 +197,11 @@ const onRemove = async () => {
 
           <Input name='title' value={todoToEdit.title} 
           onChange={changeHandler}/>
-        <Textarea name='descreption' value={todoToEdit.des} 
+        <Textarea name='des' value={todoToEdit.des} 
         onChange={changeHandler} />
 
         <div className="flex justify-center items-center space-x-1">
-          <Button className="bg-blue-700">Edit</Button>
+          <Button className="bg-green-600">Edit</Button>
           <Button onClick={onCloseEditModal} className="bg-stone-400">Cancel</Button>
         </div>
         </form>
@@ -137,7 +210,7 @@ const onRemove = async () => {
         {/* fin Edit partie */}
 
         {/* Remove partie */}
-       <Modal isOpen={isOpenModalRemov} closeModal={onCloseRemovModal} 
+       <Modal isOpen={isOpenRemovModal} closeModal={onCloseRemovModal} 
        title="Remove  todo">
         <form className="space-y-2" >
 
@@ -151,9 +224,40 @@ const onRemove = async () => {
         
        </Modal>
         {/* fin Remove partie */}
+
+        {/* Create partie */}
+       <Modal closeModal={onCloseAddModal} isOpen={isOpenAddModal}
+      title="Create The Todo">
+        <form onSubmit={submitAddHandeler} 
+        className="space-y-1">
+
+        <Input name='title' 
+         value={todoAdd.title} onChange={onChangeAddTodoHandler} 
+        />
+
+         <Textarea name="des" 
+          value={todoAdd.des} onChange={onChangeAddTodoHandler}
+          /> 
+
+        <div className="flex justify-center items-center space-x-3 m-3">
+        <Button className="bg-stone-400" 
+        onClick={onCloseAddModal} 
+        type="button" >
+            Cancel
+          </Button>
+
+          <Button className="bg-blue-700">
+           Create
+          </Button>
+        </div> 
+
+        </form>
+      </Modal>
+      {/* fin Create partie */}
      
      <span></span>
         <span></span>
+         </div>
       </main>
       
     );

@@ -33,7 +33,7 @@ const Logoutin = () =>{
            items-center space-x-14">
             
            <NavLink to="/Profile">
-            <p className="text-xl font-medium hover:text-[#d2d9e9] ">
+            <p className="text-lg font-medium hover:text-[#d2d9e9] ">
               {userData.user.username}</p>
             </NavLink> 
 
